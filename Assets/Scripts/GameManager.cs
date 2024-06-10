@@ -133,13 +133,13 @@ public class GameManager : MonoBehaviour
 
     public void SelectTile(Tile tile)
     {
-        Debug.Log("SelectTile called");
+        // Debug.Log("SelectTile called");
         if (selectedTiles.Count == 0)
         {
-            Debug.Log("First tile selected");
+            // Debug.Log("First tile selected");
             if (AreTilesAdjacent(player.gridPosition, tile.gridPosition))
             {
-                Debug.Log("Tile is adjacent to player");
+                // Debug.Log("Tile is adjacent to player");
                 tile.ToggleSelection(true);
                 selectedTiles.Add(tile);
                 selectedTileType = tile.type;
@@ -153,15 +153,15 @@ public class GameManager : MonoBehaviour
         {
             Tile lastSelectedTile = selectedTiles[selectedTiles.Count - 1];
             Vector2Int currentDirection = tile.gridPosition - lastSelectedTile.gridPosition;
-            Debug.Log($"Current direction: {currentDirection}, Last direction: {lastDirection}");
+            // Debug.Log($"Current direction: {currentDirection}, Last direction: {lastDirection}");
             if (AreTilesAdjacent(lastSelectedTile.gridPosition, tile.gridPosition) && !tile.IsSelected() && tile.type == selectedTileType)
             {
-                Debug.Log("Tile is adjacent and matches type");
+                // Debug.Log("Tile is adjacent and matches type");
                 if (isInitialDirectionSet)
                 {
                     if (IsValidMove(lastDirection, currentDirection))
                     {
-                        Debug.Log("Move is valid");
+                        // Debug.Log("Move is valid");
                         tile.ToggleSelection(true);
                         selectedTiles.Add(tile);
                         lastDirection = currentDirection;
@@ -266,10 +266,12 @@ public class GameManager : MonoBehaviour
 
     private void UpdateLineRenderer()
     {
-        lineRenderer.positionCount = selectedTiles.Count;
+        lineRenderer.positionCount = selectedTiles.Count + 1; // +1 to include the player's position
+        lineRenderer.SetPosition(0, player.transform.position); // Start from the player's position
+
         for (int i = 0; i < selectedTiles.Count; i++)
         {
-            lineRenderer.SetPosition(i, selectedTiles[i].transform.position);
+            lineRenderer.SetPosition(i + 1, selectedTiles[i].transform.position);
         }
     }
 

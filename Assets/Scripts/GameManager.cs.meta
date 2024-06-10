@@ -3,7 +3,14 @@ guid: b8b4571900764024785c602d5e149a6c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - player: {instanceID: 0}
+  - treasurePrefab: {fileID: 4341154918386732130, guid: 97eefaec2af665a4aa0bd10992effc26, type: 3}
+  - weaponPrefab: {fileID: 4035213806234470326, guid: a755a9481ba7d7247ad026ecd0212ff8, type: 3}
+  - potionPrefab: {fileID: 6118421301216963108, guid: 2bce2ae67f2b9994ab02ac2bda039172, type: 3}
+  - shieldPrefab: {fileID: 4035213806234470326, guid: c47872f9a48e869428d7a229367c694f, type: 3}
+  - enemyPrefab: {fileID: 4035213806234470326, guid: 39f1df13e466b7d4f8ac8eaeaa325ac6, type: 3}
+  - scoreText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
