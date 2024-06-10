@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 4341154918386732130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb05e2b29c3b6774c9d00242977b6378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
   gridPosition: {x: 0, y: 0}
-  originalColor: {r: 0, g: 0, b: 0, a: 0}
+  glowMaterial: {fileID: 2100000, guid: 0dfb3f598ed260c46b7ac2b6c8e10054, type: 2}
 --- !u!212 &2517585173012798595
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_SortingLayerID: 1216646003
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: -575246719614078034, guid: 670f30144b9c1bf4e9ad9986ed04ca22, type: 3}
+  m_Sprite: {fileID: -5361774201948091306, guid: 670f30144b9c1bf4e9ad9986ed04ca22, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123,5 +123,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.3, y: 1.3}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0

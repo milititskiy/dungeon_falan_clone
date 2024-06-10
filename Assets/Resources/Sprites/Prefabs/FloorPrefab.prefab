@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb05e2b29c3b6774c9d00242977b6378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 5
-  isMatched: 1
-  level: 1
+  type: 0
+  gridPosition: {x: 0, y: 0}
+  glowMaterial: {fileID: 0}
 --- !u!212 &-3841987449769713648
 SpriteRenderer:
   m_ObjectHideFlags: 0

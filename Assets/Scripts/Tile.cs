@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public enum TileType { Empty, Treasure, Weapon, Potion, Shield }
+    public enum TileType { Empty, Treasure, Weapon, Potion, Shield, Enemy }
     public TileType type;
     public Vector2Int gridPosition;
 
     private bool isSelected = false;
-    public Color originalColor; // Store the original color of the tile
+    private Material originalMaterial;
+    public Material glowMaterial; // Assign this in the Inspector
 
     private void Awake()
     {
@@ -17,30 +18,9 @@ public class Tile : MonoBehaviour
         {
             collider.size = new Vector2(0.8f, 0.8f); // Adjust the size as needed
         }
-    }
 
-    private void Start()
-    {
-        // Set the original color based on the tile type
-        switch (type)
-        {
-            case TileType.Treasure:
-                originalColor = Color.yellow;
-                break;
-            case TileType.Weapon:
-                originalColor = Color.red;
-                break;
-            case TileType.Potion:
-                originalColor = Color.blue;
-                break;
-            case TileType.Shield:
-                originalColor = Color.green;
-                break;
-            default:
-                originalColor = Color.white;
-                break;
-        }
-        GetComponent<SpriteRenderer>().color = originalColor;
+        // Store the original material
+        originalMaterial = GetComponent<SpriteRenderer>().material;
     }
 
     private void OnMouseDown()
@@ -54,20 +34,26 @@ public class Tile : MonoBehaviour
         {
             GameManager.Instance.SelectTile(this);
         }
+
+        // Apply glow material
+        GetComponent<SpriteRenderer>().material = glowMaterial;
+    }
+
+    private void OnMouseExit()
+    {
+        // Revert to the original material
+        GetComponent<SpriteRenderer>().material = originalMaterial;
     }
 
     public void ToggleSelection(bool select)
     {
         isSelected = select;
-        GetComponent<SpriteRenderer>().color = select ? new Color(0, 1, 0, 0.6f) : originalColor; // Change color based on selection
+        // Change color based on selection if desired
     }
 
     public void Darken(bool darken)
     {
-        if (!isSelected)
-        {
-            GetComponent<SpriteRenderer>().color = darken ? new Color(0.5f, 0.5f, 0.5f, 1f) : originalColor; // Darken or reset color
-        }
+        // Darken or reset color if desired
     }
 
     public bool IsSelected()

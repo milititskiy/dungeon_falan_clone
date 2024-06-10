@@ -97,7 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa247cfb0819964185bc244632adba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition: {x: 0, y: 0}
   moveSpeed: 15
+  driftAmount: 0.2
 --- !u!114 &8638296862980821095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,9 +112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb05e2b29c3b6774c9d00242977b6378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 4
-  isMatched: 0
-  level: 2
+  type: 0
+  gridPosition: {x: 0, y: 0}
+  glowMaterial: {fileID: 2100000, guid: 0dfb3f598ed260c46b7ac2b6c8e10054, type: 2}
 --- !u!61 &-5197981443395176517
 BoxCollider2D:
   m_ObjectHideFlags: 0

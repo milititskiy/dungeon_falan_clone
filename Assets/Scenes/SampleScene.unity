@@ -239,8 +239,13 @@ MonoBehaviour:
   player: {fileID: 1586298890}
   gridWidth: 8
   gridHeight: 8
-  tilePrefab: {fileID: 4341154918386732130, guid: 97eefaec2af665a4aa0bd10992effc26, type: 3}
+  treasurePrefab: {fileID: 4341154918386732130, guid: 97eefaec2af665a4aa0bd10992effc26, type: 3}
+  weaponPrefab: {fileID: 4035213806234470326, guid: a755a9481ba7d7247ad026ecd0212ff8, type: 3}
+  potionPrefab: {fileID: 6118421301216963108, guid: 2bce2ae67f2b9994ab02ac2bda039172, type: 3}
+  shieldPrefab: {fileID: 4035213806234470326, guid: c47872f9a48e869428d7a229367c694f, type: 3}
+  enemyPrefab: {fileID: 4035213806234470326, guid: 39f1df13e466b7d4f8ac8eaeaa325ac6, type: 3}
   tileSpacing: 2.5
+  scoreText: {fileID: 0}
 --- !u!4 &1257637442
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
@@ -9,11 +10,18 @@ public class GameManager : MonoBehaviour
     public Tile[,] grid;
     public int gridWidth;
     public int gridHeight;
-    public GameObject tilePrefab;
-    public float tileSpacing = 1.1f;  // Add a spacing factor for tiles
+    public GameObject treasurePrefab;
+    public GameObject weaponPrefab;
+    public GameObject potionPrefab;
+    public GameObject shieldPrefab;
+    public GameObject enemyPrefab;  // Reference to the enemy prefab
+    public float tileSpacing = 1.1f;  // Spacing factor for tiles
+    public Text scoreText;  // UI Text to display the score
+
+    private int score;  // Score variable
 
     private List<Tile> selectedTiles = new List<Tile>();
-    private HashSet<Tile.TileType> selectedTileTypes = new HashSet<Tile.TileType>();
+    private Tile.TileType selectedTileType;
     private Vector2Int lastDirection;
     private bool isInitialDirectionSet = false;
 
@@ -34,6 +42,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InitializeGrid();
+        score = 0;  // Initialize score
+        UpdateScoreText();  // Update the score display
+
         lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer == null)
         {
@@ -65,42 +76,73 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < gridHeight; y++)
             {
-                // Skip the player's initial position
                 if (x == playerStartPos.x && y == playerStartPos.y)
                 {
                     continue;
                 }
 
                 Vector3 position = new Vector3(x * tileSpacing, y * tileSpacing, 0);
-                GameObject tileObject = Instantiate(tilePrefab, position, Quaternion.identity);
+                GameObject tileObject = InstantiateTilePrefab(position);
                 Tile tile = tileObject.GetComponent<Tile>();
                 tile.gridPosition = new Vector2Int(x, y);
-                tile.type = GetRandomTileType(); // Assign a random tile type
                 tileObject.GetComponent<SpriteRenderer>().sortingLayerName = "Grid";  // Set sorting layer
                 grid[x, y] = tile;
-
-                // Set the sprite color based on the tile type (this is just for demonstration)
-                tileObject.GetComponent<SpriteRenderer>().color = tile.originalColor;
             }
         }
+    }
+
+    private GameObject InstantiateTilePrefab(Vector3 position)
+    {
+        Tile.TileType type = GetRandomTileType();
+        GameObject prefab;
+
+        switch (type)
+        {
+            case Tile.TileType.Treasure:
+                prefab = treasurePrefab;
+                break;
+            case Tile.TileType.Weapon:
+                prefab = weaponPrefab;
+                break;
+            case Tile.TileType.Potion:
+                prefab = potionPrefab;
+                break;
+            case Tile.TileType.Shield:
+                prefab = shieldPrefab;
+                break;
+            case Tile.TileType.Enemy:
+                prefab = enemyPrefab;
+                break;
+            default:
+                prefab = treasurePrefab;
+                break;
+        }
+
+        GameObject tileObject = Instantiate(prefab, position, Quaternion.identity);
+        Tile tile = tileObject.GetComponent<Tile>();
+        tile.type = type;
+        return tileObject;
     }
 
     private Tile.TileType GetRandomTileType()
     {
         // Randomly select a tile type (excluding Empty)
-        Tile.TileType[] types = { Tile.TileType.Treasure, Tile.TileType.Weapon, Tile.TileType.Potion, Tile.TileType.Shield };
+        Tile.TileType[] types = { Tile.TileType.Treasure, Tile.TileType.Weapon, Tile.TileType.Potion, Tile.TileType.Shield, Tile.TileType.Enemy };
         return types[Random.Range(0, types.Length)];
     }
 
     public void SelectTile(Tile tile)
     {
+        Debug.Log("SelectTile called");
         if (selectedTiles.Count == 0)
         {
+            Debug.Log("First tile selected");
             if (AreTilesAdjacent(player.gridPosition, tile.gridPosition))
             {
+                Debug.Log("Tile is adjacent to player");
                 tile.ToggleSelection(true);
                 selectedTiles.Add(tile);
-                selectedTileTypes.Add(tile.type);
+                selectedTileType = tile.type;
                 lastDirection = tile.gridPosition - player.gridPosition;
                 isInitialDirectionSet = true;
                 UpdateLineRenderer();
@@ -111,15 +153,17 @@ public class GameManager : MonoBehaviour
         {
             Tile lastSelectedTile = selectedTiles[selectedTiles.Count - 1];
             Vector2Int currentDirection = tile.gridPosition - lastSelectedTile.gridPosition;
-            if (AreTilesAdjacent(lastSelectedTile.gridPosition, tile.gridPosition) && !tile.IsSelected())
+            Debug.Log($"Current direction: {currentDirection}, Last direction: {lastDirection}");
+            if (AreTilesAdjacent(lastSelectedTile.gridPosition, tile.gridPosition) && !tile.IsSelected() && tile.type == selectedTileType)
             {
+                Debug.Log("Tile is adjacent and matches type");
                 if (isInitialDirectionSet)
                 {
                     if (IsValidMove(lastDirection, currentDirection))
                     {
+                        Debug.Log("Move is valid");
                         tile.ToggleSelection(true);
                         selectedTiles.Add(tile);
-                        selectedTileTypes.Add(tile.type);
                         lastDirection = currentDirection;
                         UpdateLineRenderer();
                         UpdateTileColors();
@@ -129,7 +173,6 @@ public class GameManager : MonoBehaviour
                 {
                     tile.ToggleSelection(true);
                     selectedTiles.Add(tile);
-                    selectedTileTypes.Add(tile.type);
                     lastDirection = currentDirection;
                     isInitialDirectionSet = true;
                     UpdateLineRenderer();
@@ -193,6 +236,7 @@ public class GameManager : MonoBehaviour
                     DestroyTile(tile);
                 }
                 player.MoveAlongPath(selectedTiles);
+                UpdateScore(selectedTiles.Count); // Update score based on the number of selected tiles
             }
             else
             {
@@ -202,7 +246,6 @@ public class GameManager : MonoBehaviour
                 }
             }
             selectedTiles.Clear();
-            selectedTileTypes.Clear();
             isInitialDirectionSet = false;
             lineRenderer.positionCount = 0;  // Clear the line
             ResetTileColors();
@@ -239,7 +282,7 @@ public class GameManager : MonoBehaviour
                 Tile tile = grid[x, y];
                 if (tile != null && !tile.IsSelected())
                 {
-                    tile.Darken(!selectedTileTypes.Contains(tile.type));
+                    tile.Darken(tile.type != selectedTileType);
                 }
             }
         }
@@ -257,6 +300,21 @@ public class GameManager : MonoBehaviour
                     tile.Darken(false);
                 }
             }
+        }
+    }
+
+    private void UpdateScore(int tilesCount)
+    {
+        // Update the score based on the number of tiles selected
+        score += tilesCount * 10; // Example scoring logic: 10 points per tile
+        UpdateScoreText();
+    }
+
+    private void UpdateScoreText()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString();
         }
     }
 }
