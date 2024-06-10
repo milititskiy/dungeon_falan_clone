@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         // Set the initial position of the player on the grid
-        transform.position = GameManager.Instance.GetTileWorldPosition(gridPosition);
+        transform.position = GameManager.Instance.gridManager.GetTileWorldPosition(gridPosition);
     }
 
     public void MoveAlongPath(List<Tile> path)
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
         foreach (Tile tile in path)
         {
             Vector3 startPosition = transform.position;
-            Vector3 targetPosition = GameManager.Instance.GetTileWorldPosition(tile.gridPosition);
+            Vector3 targetPosition = GameManager.Instance.gridManager.GetTileWorldPosition(tile.gridPosition);
             Vector2Int currentDirection = tile.gridPosition - gridPosition;
 
             // Apply drift if changing direction

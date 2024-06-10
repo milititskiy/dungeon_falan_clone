@@ -25,14 +25,14 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        GameManager.Instance.SelectTile(this);
+        GameManager.Instance.selectionManager.SelectTile(this);
     }
 
     private void OnMouseOver()
     {
         if (Input.GetMouseButton(0))
         {
-            GameManager.Instance.SelectTile(this);
+            GameManager.Instance.selectionManager.SelectTile(this);
         }
 
         // Apply glow material
