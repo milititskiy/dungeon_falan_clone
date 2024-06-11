@@ -8,12 +8,33 @@ public class SelectionManager : MonoBehaviour
     private Vector2Int lastDirection;
     private bool isInitialDirectionSet = false;
 
+    private Dictionary<Tile.TileType, List<Tile.TileType>> validMatchCombinations;
+
+    private void Awake()
+    {
+        InitializeValidMatchCombinations();
+    }
+
     private void Update()
     {
         if (Input.GetMouseButton(0))
         {
             DeselectTile();
         }
+    }
+
+    private void InitializeValidMatchCombinations()
+    {
+        validMatchCombinations = new Dictionary<Tile.TileType, List<Tile.TileType>>();
+
+        // Define valid match combinations
+        validMatchCombinations.Add(Tile.TileType.Weapon, new List<Tile.TileType> { Tile.TileType.Enemy, Tile.TileType.Weapon });
+        validMatchCombinations.Add(Tile.TileType.Enemy, new List<Tile.TileType> { Tile.TileType.Weapon, Tile.TileType.Enemy });
+
+        // Add other combinations here as needed
+        validMatchCombinations.Add(Tile.TileType.Treasure, new List<Tile.TileType> { Tile.TileType.Treasure });
+        validMatchCombinations.Add(Tile.TileType.Potion, new List<Tile.TileType> { Tile.TileType.Potion });
+        validMatchCombinations.Add(Tile.TileType.Shield, new List<Tile.TileType> { Tile.TileType.Shield });
     }
 
     public void ProcessSelection()
@@ -64,7 +85,7 @@ public class SelectionManager : MonoBehaviour
             Tile lastSelectedTile = selectedTiles[selectedTiles.Count - 1];
             Vector2Int currentDirection = tile.gridPosition - lastSelectedTile.gridPosition;
             Debug.Log($"Current direction: {currentDirection}, Last direction: {lastDirection}");
-            if (GameManager.Instance.gridManager.AreTilesAdjacent(lastSelectedTile.gridPosition, tile.gridPosition) && !tile.IsSelected() && tile.type == selectedTileType)
+            if (GameManager.Instance.gridManager.AreTilesAdjacent(lastSelectedTile.gridPosition, tile.gridPosition) && !tile.IsSelected() && IsValidTileType(tile.type))
             {
                 Debug.Log("Tile is adjacent and matches type");
                 if (isInitialDirectionSet)
@@ -90,6 +111,17 @@ public class SelectionManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool IsValidTileType(Tile.TileType tileType)
+    {
+        if (validMatchCombinations.ContainsKey(selectedTileType))
+        {
+            return validMatchCombinations[selectedTileType].Contains(tileType);
+        }
+
+        // Allow tiles of the same type to be selected together if not defined in the dictionary
+        return selectedTileType == tileType;
     }
 
     public void DeselectTile()
