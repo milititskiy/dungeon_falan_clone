@@ -14,6 +14,20 @@ public class Player : MonoBehaviour
         transform.position = GameManager.Instance.gridManager.GetTileWorldPosition(gridPosition);
     }
 
+    private void Update()
+    {
+        Vector3 moveDirection = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) moveDirection += Vector3.up;
+        if (Input.GetKey(KeyCode.A)) moveDirection += Vector3.left;
+        if (Input.GetKey(KeyCode.S)) moveDirection += Vector3.down;
+        if (Input.GetKey(KeyCode.D)) moveDirection += Vector3.right;
+
+        if (moveDirection != Vector3.zero)
+        {
+            transform.position += moveDirection.normalized * moveSpeed * Time.deltaTime;
+        }
+    }
+
     public void MoveAlongPath(List<Tile> path)
     {
         // Create a copy of the path list to avoid modification issues

@@ -15,10 +15,19 @@ public class GridManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeGrid();
+        // Initialize the grid based on the current state
+        if (GameManager.Instance.inBattle)
+        {
+            InitializeGrid();
+        }
+        else
+        {
+            ClearGrid();
+            PlacePlayer(GameManager.Instance.player);
+        }
     }
 
-    private void InitializeGrid()
+    public void InitializeGrid()
     {
         grid = new Tile[gridWidth, gridHeight];
         Vector2Int playerStartPos = GameManager.Instance.player.gridPosition;
@@ -141,5 +150,31 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ClearGrid()
+    {
+        if (grid == null)
+        {
+            grid = new Tile[gridWidth, gridHeight]; // Ensure the grid is initialized
+        }
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                if (grid[x, y] != null)
+                {
+                    Destroy(grid[x, y].gameObject);
+                    grid[x, y] = null;
+                }
+            }
+        }
+    }
+
+    public void PlacePlayer(Player player)
+    {
+        player.transform.position = new Vector3(0, 0, 0); // Adjust the starting position as needed
+        player.gridPosition = new Vector2Int(0, 0); // Adjust the starting grid position as needed
     }
 }
