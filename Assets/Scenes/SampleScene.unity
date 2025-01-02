@@ -311,6 +311,7 @@ MonoBehaviour:
   selectionManager: {fileID: 0}
   scoreManager: {fileID: 0}
   lineManager: {fileID: 0}
+  inBattle: 1
 --- !u!4 &1257637442
 Transform:
   m_ObjectHideFlags: 0
